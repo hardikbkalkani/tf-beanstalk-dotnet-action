@@ -58,7 +58,7 @@ resource "aws_elastic_beanstalk_environment" "beanstalkappenv" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t2.medium"
+    value     = "t2.micro"
   }
   setting {
     namespace = "aws:ec2:vpc"
