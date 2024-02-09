@@ -36,6 +36,8 @@ jobs:
         pip install awsebcli --upgrade --user
         ls
         eb --version
+    - name: Check EB Cli version
+      run: eb --version  
     - uses: actions/checkout@v2
     - name: Debug Environment Variables
       run: |
