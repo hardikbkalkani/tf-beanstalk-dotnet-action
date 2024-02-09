@@ -34,6 +34,7 @@ jobs:
         python --version
         pip --version
         pip install awsebcli --upgrade --user
+        ls
         eb --version
         eb init -p '64bit Amazon Linux 2023 v3.0.3 running .NET 6'  # Add this line to initialize EB
     - uses: actions/checkout@v2
