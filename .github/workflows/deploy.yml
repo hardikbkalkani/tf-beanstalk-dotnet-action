@@ -35,6 +35,7 @@ jobs:
         pip --version
         pip install awsebcli --upgrade --user
         eb --version
+        eb init -p dotnet-env-dev  # Add this line to initialize EB
     - uses: actions/checkout@v2
     - name: Debug Environment Variables
       run: |
