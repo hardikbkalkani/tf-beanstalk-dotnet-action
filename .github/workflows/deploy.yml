@@ -35,7 +35,7 @@ jobs:
         pip --version
         pip install awsebcli --upgrade --user
         eb --version
-        eb init -p dotnet-env-dev  # Add this line to initialize EB
+        eb init -p '64bit Amazon Linux 2023 v3.0.3 running .NET 6'  # Add this line to initialize EB
     - uses: actions/checkout@v2
     - name: Debug Environment Variables
       run: |
