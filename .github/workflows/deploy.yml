@@ -57,4 +57,4 @@ jobs:
     - name: list environment
       run: eb list  
     - name: Deploy to EB
-      run: eb deploy dotnet-env-dev
+      run: eb deploy dotnet-env-dev --staged
