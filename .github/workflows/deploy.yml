@@ -12,7 +12,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
-        
     - name: Checkout source code
       uses: actions/checkout@v2
     - uses: actions/setup-dotnet@v3
@@ -20,42 +19,27 @@ jobs:
         dotnet-version: '6.0.x'
     - name: Publish
       run: 
-        # dotnet restore
         dotnet publish WebApi -o site
     - name: Generate deployment package
-      run: cd site; zip -r ../deploy.zip . -x '*.git*'; cd ..
+      run: cd site && zip -r ../deploy.zip . -x '*.git*'
     - name: Upload .NET to artifact
       uses: actions/upload-artifact@v3
       with:
         name: dotnet-zip
         path: deploy.zip
-        
-    - name: Setup EB CLI
-      run: |
-        python --version
-        pip --version
-        pip install awsebcli --upgrade --user
-        ls
-        eb --version
-    - name: Check EB Cli version
-      run: eb --version  
-    - uses: actions/checkout@v2
     - name: Debug Environment Variables
       run: |
         echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
         echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
         echo "AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
-
-    - name: Configure AWS credentials
+    - name: Install AWS CLI
       run: |
-        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-        aws configure set region $AWS_DEFAULT_REGION
-    - name: Go to directory
-      run: cd WebApi    
-    - name: Initialize Elastic Beanstalk
-      run: eb init -p '64bit Amazon Linux 2023 v3.0.3 running .NET 6'
-    - name: list environment
-      run: eb list  
+        sudo apt-get update
+        sudo apt-get install -y awscli
+    - name: Upload deploy.zip to S3
+      run: |
+        aws s3 cp deploy.zip s3://my-development-buckethk/deploy.zip
     - name: Deploy to EB
-      run: eb deploy dotnet-env-dev --staged
+      run: |
+        aws elasticbeanstalk create-application-version --application-name dotnet-app --version-label $GITHUB_SHA --source-bundle S3Bucket="my-development-buckethk",S3Key="deploy.zip"
+        aws elasticbeanstalk update-environment --application-name dotnet-app --environment-name dotnet-env-dev --version-label $GITHUB_SHA
