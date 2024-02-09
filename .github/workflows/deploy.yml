@@ -50,6 +50,7 @@ jobs:
         aws configure set region $AWS_DEFAULT_REGION
     - name: Initialize Elastic Beanstalk
       run: eb init -p '64bit Amazon Linux 2023 v3.0.3 running .NET 6'
-      
+    - name: list environment
+      run: eb list  
     - name: Deploy to EB
       run: eb deploy dotnet-env-dev
