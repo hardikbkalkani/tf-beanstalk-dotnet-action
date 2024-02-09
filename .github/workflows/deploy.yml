@@ -36,7 +36,6 @@ jobs:
         pip install awsebcli --upgrade --user
         ls
         eb --version
-        eb init -p '64bit Amazon Linux 2023 v3.0.3 running .NET 6'  # Add this line to initialize EB
     - uses: actions/checkout@v2
     - name: Debug Environment Variables
       run: |
@@ -50,4 +49,6 @@ jobs:
         aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
         aws configure set region $AWS_DEFAULT_REGION
     - name: Deploy to EB
-      run: eb deploy dotnet-env-dev --staged
+      run: 
+        eb init -p '64bit Amazon Linux 2023 v3.0.3 running .NET 6'
+        eb deploy dotnet-env-dev --staged
